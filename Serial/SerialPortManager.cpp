@@ -314,10 +314,7 @@ bool SerialPortManager::saveOption()
 	object["default_baudrate"] = comboBoxBaudRate->currentIndex();
 	object["default_protocol"] = comboBoxProtocol->currentIndex();
 
-	QJsonArray jsonArray;
-	jsonArray.push_back(object);
-
-	QJsonDocument jsonDocument(jsonArray);
+	QJsonDocument jsonDocument(object);
 	loadFile.write(jsonDocument.toJson(QJsonDocument::JsonFormat::Indented));
 	loadFile.close();
 
