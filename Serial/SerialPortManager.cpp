@@ -28,6 +28,20 @@ SerialPortManager::SerialPortManager(int id)
 			widget->setCurrentRow(widget->count() - 1);
 		}
 	});
+
+	QObject::connect(this, &QSerialPort::errorOccurred, [&](QSerialPort::SerialPortError error)
+	{
+		if( error == QSerialPort::SerialPortError::ResourceError )
+		{
+			auto widget = serialWidget->findChild<QPushButton*>("pushButtonConnect");
+			if (widget)
+			{
+				widget->setChecked(false);
+
+				cout << "ERROR: device disconnected." << endl;
+			}
+		}
+	});
 }
 
 void SerialPortManager::availablePorts(std::vector<QString>& ports)
@@ -94,6 +108,9 @@ void SerialPortManager::makeWidgets()
 		comboBoxProtocol->addItems({ "8N1", "8E1", "8O1" });
 		comboBoxProtocol->setObjectName("comboBoxProtocol");
 
+		pushButtonConnect->setCheckable(true);
+		pushButtonConnect->setObjectName("pushButtonConnect");
+
 		listCommands->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 		listCommands->setObjectName("listCommands");
 
@@ -130,7 +147,7 @@ void SerialPortManager::makeWidgets()
 			}
 		);
 
-		QObject::connect(pushButtonConnect, &QPushButton::clicked,
+		QObject::connect(pushButtonConnect, &QPushButton::toggled,
 			[this, pushButtonConnect, lineEditSendCommand, lineEditSerialPortName, comboBoxBaudRate, comboBoxProtocol]()
 			{
 				if (isConnected())
@@ -138,6 +155,8 @@ void SerialPortManager::makeWidgets()
 					disconnect();
 
 					pushButtonConnect->setText("Connect");
+					pushButtonConnect->setChecked(false);
+
 					lineEditSendCommand->setEnabled(false);
 				}
 				else
@@ -149,6 +168,10 @@ void SerialPortManager::makeWidgets()
 						lineEditSendCommand->setEnabled(true);
 
 						saveOption();
+					}
+					else
+					{
+						pushButtonConnect->setChecked(false);
 					}
 				}
 			}
