@@ -18,48 +18,58 @@ void Dialog::initialize()
 	installEventFilter(this);
 
 	{
-		auto labelDec = new QLabel("DEC: ");
-		auto labelEqual = new QLabel(" = ");
-		auto labelHex = new QLabel("HEX: ");
-		auto horizontalSpacer = new QSpacerItem(40, 10, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-		auto lineEditHexHelper = new QLineEdit;
-		lineEditHexHelper->setFixedWidth(200);
-		lineEditHexHelper->setValidator(new QIntValidator());
-
-		auto lineEditDecHelper = new QLineEdit;
-		lineEditDecHelper->setFixedWidth(200);
-		lineEditDecHelper->setValidator(new QRegExpValidator(QRegExp("([0-9a-fA-F]+")));
+		auto groupBox = new QGroupBox;
 
 		helperLayout = new QHBoxLayout;
-		helperLayout->setAlignment(Qt::AlignLeft);
-		helperLayout->addWidget(labelDec);
-		helperLayout->addWidget(lineEditHexHelper);
-		helperLayout->addWidget(labelEqual);
-		helperLayout->addWidget(labelHex);
-		helperLayout->addWidget(lineEditDecHelper);
-		helperLayout->addItem(horizontalSpacer);
+		helperLayout->addWidget(groupBox);
 
-		//////////////////////////////////////////////////////////////////////////
+		{
+			auto gridLayout = new QGridLayout;
+			gridLayout->setAlignment(Qt::AlignLeft);
 
-		connect(lineEditHexHelper, &QLineEdit::textEdited, [lineEditHexHelper, lineEditDecHelper]()
-			{
-				auto number = lineEditHexHelper->text().toInt();
+			auto labelDec = new QLabel("Decimal: ");
+			labelDec->setFixedWidth(100);
 
-				QString hexString;
-				hexString.setNum(number, 16);
-				lineEditDecHelper->setText(hexString);
-			}
-		);
+			auto labelHex = new QLabel("Hexadecimal: ");
+			labelHex->setFixedWidth(100);
 
-		connect(lineEditDecHelper, &QLineEdit::textEdited, [lineEditHexHelper, lineEditDecHelper]()
-			{
-				QString hexString = lineEditDecHelper->text();
+			auto lineEditHexHelper = new QLineEdit;
+			lineEditHexHelper->setFixedWidth(200);
+			lineEditHexHelper->setValidator(new QIntValidator());
 
-				auto value = QByteArray::fromHex(hexString.toLatin1());
-				lineEditHexHelper->setText(value);
-			}
-		);
+			auto lineEditDecHelper = new QLineEdit;
+			lineEditDecHelper->setFixedWidth(200);
+			lineEditDecHelper->setValidator(new QRegExpValidator(QRegExp("([0-9a-fA-F]+")));
+
+			gridLayout->addWidget(labelDec, 0, 0);
+			gridLayout->addWidget(lineEditHexHelper, 0, 1);
+
+			gridLayout->addWidget(labelHex, 1, 0);
+			gridLayout->addWidget(lineEditDecHelper, 1, 1);
+
+			groupBox->setLayout(gridLayout);
+
+			//////////////////////////////////////////////////////////////////////////
+
+			connect(lineEditHexHelper, &QLineEdit::textEdited, [lineEditHexHelper, lineEditDecHelper]()
+				{
+					auto number = lineEditHexHelper->text().toInt();
+
+					QString hexString;
+					hexString.setNum(number, 16);
+					lineEditDecHelper->setText(hexString);
+				}
+			);
+
+			connect(lineEditDecHelper, &QLineEdit::textEdited, [lineEditHexHelper, lineEditDecHelper]()
+				{
+					QString hexString = lineEditDecHelper->text();
+
+					auto value = QByteArray::fromHex(hexString.toLatin1());
+					lineEditHexHelper->setText(value);
+				}
+			);
+		}
 	}
 
 	{
