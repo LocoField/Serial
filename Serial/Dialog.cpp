@@ -33,40 +33,41 @@ void Dialog::initialize()
 			auto labelHex = new QLabel("Hexadecimal: ");
 			labelHex->setFixedWidth(100);
 
-			auto lineEditHexHelper = new QLineEdit;
-			lineEditHexHelper->setFixedWidth(200);
-			lineEditHexHelper->setValidator(new QIntValidator());
+			auto lineEditDecToHex = new QLineEdit;
+			lineEditDecToHex->setFixedWidth(200);
+			lineEditDecToHex->setValidator(new QIntValidator());
 
-			auto lineEditDecHelper = new QLineEdit;
-			lineEditDecHelper->setFixedWidth(200);
-			lineEditDecHelper->setValidator(new QRegExpValidator(QRegExp("([0-9a-fA-F]+")));
+			auto lineEditHexToDec = new QLineEdit;
+			lineEditHexToDec->setFixedWidth(200);
+			lineEditHexToDec->setValidator(new QRegExpValidator(QRegExp("[0-9a-fA-F]+")));
 
 			gridLayout->addWidget(labelDec, 0, 0);
-			gridLayout->addWidget(lineEditHexHelper, 0, 1);
+			gridLayout->addWidget(lineEditDecToHex, 0, 1);
 
 			gridLayout->addWidget(labelHex, 1, 0);
-			gridLayout->addWidget(lineEditDecHelper, 1, 1);
+			gridLayout->addWidget(lineEditHexToDec, 1, 1);
 
 			groupBox->setLayout(gridLayout);
 
 			//////////////////////////////////////////////////////////////////////////
 
-			connect(lineEditHexHelper, &QLineEdit::textEdited, [lineEditHexHelper, lineEditDecHelper]()
+			connect(lineEditDecToHex, &QLineEdit::textEdited, [lineEditHexToDec](const QString& text)
 				{
-					auto number = lineEditHexHelper->text().toInt();
+					auto number = text.toInt();
 
 					QString hexString;
 					hexString.setNum(number, 16);
-					lineEditDecHelper->setText(hexString);
+					lineEditHexToDec->setText(hexString);
 				}
 			);
 
-			connect(lineEditDecHelper, &QLineEdit::textEdited, [lineEditHexHelper, lineEditDecHelper]()
+			connect(lineEditHexToDec, &QLineEdit::textEdited, [lineEditDecToHex](const QString& text)
 				{
-					QString hexString = lineEditDecHelper->text();
+					auto number = text.toInt(nullptr, 16);
 
-					auto value = QByteArray::fromHex(hexString.toLatin1());
-					lineEditHexHelper->setText(value);
+					QString decString;
+					decString.setNum(number);
+					lineEditDecToHex->setText(decString);
 				}
 			);
 		}
