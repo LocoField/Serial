@@ -111,6 +111,7 @@ void SerialPortManager::makeWidgets()
 		pushButtonConnect->setCheckable(true);
 		pushButtonConnect->setObjectName("pushButtonConnect");
 
+		listCommands->setMinimumSize(600, 300);
 		listCommands->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 		listCommands->setObjectName("listCommands");
 
@@ -329,7 +330,6 @@ void SerialPortManager::addCommandSet(const CommandSet& commandSet)
 		{
 			labelComment->setObjectName("labelComment");
 			labelComment->setText(commandSet.comment);
-			labelComment->setMinimumWidth(150);
 			labelComment->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 		}
 
@@ -337,7 +337,6 @@ void SerialPortManager::addCommandSet(const CommandSet& commandSet)
 		{
 			lineEditCommand->setObjectName("lineEditCommand");
 			lineEditCommand->setText(commandSet.command);
-			lineEditCommand->setMinimumWidth(150);
 			lineEditCommand->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 			lineEditCommand->setDisabled(true);
 		}
