@@ -34,14 +34,22 @@ protected:
 	void clearCommandSets();
 
 protected:
-
 	bool connect(QString portName, int baudRate, int mode = 0);
 	bool isConnected();
 	void disconnect();
 
+public:
+	void setAutoRead(bool enable);
+
+	QByteArray read(qint64 maxlen);
 	qint64 write(const QByteArray& data);
 
+	bool write(char code);
+	bool read(char& code, int timeout = 2000);
+
 protected:
+	bool autoRead = true;
+
 	int widgetId = 0;
 	QWidget* serialWidget = nullptr;
 

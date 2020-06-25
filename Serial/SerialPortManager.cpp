@@ -9,6 +9,9 @@ SerialPortManager::SerialPortManager(int id)
 
 	QObject::connect(this, &QIODevice::readyRead, [&]()
 	{
+		if (autoRead == false)
+			return;
+
 		QByteArray data = readAll();
 
 		auto widget = serialWidget->findChild<QListWidget*>("listCommands");
@@ -535,7 +538,37 @@ void SerialPortManager::disconnect()
 	__super::close();
 }
 
+void SerialPortManager::setAutoRead(bool enable)
+{
+	autoRead = enable;
+}
+
+QByteArray SerialPortManager::read(qint64 maxlen)
+{
+	if (autoRead)
+		return QByteArray();
+
+	return __super::read(maxlen);
+}
+
 qint64 SerialPortManager::write(const QByteArray& data)
 {
 	return __super::write(data) == data.length();
+}
+
+bool SerialPortManager::write(char code)
+{
+	putChar(code);
+	return waitForBytesWritten();
+}
+
+bool SerialPortManager::read(char& code, int timeout)
+{
+	if (waitForReadyRead(timeout))
+	{
+		getChar(&code);
+		return true;
+	}
+
+	return false;
 }
