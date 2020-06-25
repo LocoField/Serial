@@ -2,7 +2,7 @@
 
 #include <QtWidgets/QDialog>
 
-class SerialPortManager;
+class SerialPort;
 
 class Dialog : public QDialog
 {
@@ -29,6 +29,6 @@ private:
 	QHBoxLayout* helperLayout;
 	QHBoxLayout* serialLayout;
 
-	std::vector<SerialPortManager*> serialManagers;
+	std::vector<SerialPort*> serialManagers;
 
 };

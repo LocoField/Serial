@@ -89,7 +89,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="CommandSetManager.cpp" />
     <ClCompile Include="Dialog.cpp" />
-    <ClCompile Include="SerialPortManager.cpp" />
+    <ClCompile Include="SerialPort.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -98,7 +98,7 @@
   <ItemGroup>
     <ClInclude Include="CommandSetManager.h" />
     <ClInclude Include="Dialog.h" />
-    <ClInclude Include="SerialPortManager.h" />
+    <ClInclude Include="SerialPort.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

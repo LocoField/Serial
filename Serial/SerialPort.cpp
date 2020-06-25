@@ -1,8 +1,8 @@
 #include "stdafx.h"
-#include "SerialPortManager.h"
+#include "SerialPort.h"
 #include "CommandSetManager.h"
 
-SerialPortManager::SerialPortManager(int id)
+SerialPort::SerialPort(int id)
 	: widgetId(id)
 {
 	makeWidgets();
@@ -47,7 +47,7 @@ SerialPortManager::SerialPortManager(int id)
 	});
 }
 
-void SerialPortManager::availablePorts(std::vector<QString>& ports)
+void SerialPort::availablePorts(std::vector<QString>& ports)
 {
 	auto p = QSerialPortInfo::availablePorts();
 
@@ -60,18 +60,18 @@ void SerialPortManager::availablePorts(std::vector<QString>& ports)
 	});
 }
 
-QWidget* SerialPortManager::widgetSerial()
+QWidget* SerialPort::widgetSerial()
 {
 	return serialWidget;
 }
 
-QLayout* SerialPortManager::layoutCommandsSet()
+QLayout* SerialPort::layoutCommandsSet()
 {
 	auto widget = serialWidget->findChild<QWidget*>("widgetCommandsSet");
 	return widget->layout();
 }
 
-void SerialPortManager::makeWidgets()
+void SerialPort::makeWidgets()
 {
 	auto regexHexValidator = new QRegExpValidator;
 	regexHexValidator->setRegExp(QRegExp("([0-9a-fA-F]{2}\\s?)+"));
@@ -139,7 +139,7 @@ void SerialPortManager::makeWidgets()
 		QObject::connect(lineEditSerialPortName, &QLineEdit::returnPressed, [lineEditSerialPortName]()
 			{
 				std::vector<QString> ports;
-				SerialPortManager::availablePorts(ports);
+				SerialPort::availablePorts(ports);
 
 				QString current = lineEditSerialPortName->text();
 
@@ -264,7 +264,7 @@ void SerialPortManager::makeWidgets()
 	}
 }
 
-bool SerialPortManager::loadOption()
+bool SerialPort::loadOption()
 {
 	bool retval = true;
 
@@ -301,7 +301,7 @@ bool SerialPortManager::loadOption()
 	return retval;
 }
 
-bool SerialPortManager::saveOption()
+bool SerialPort::saveOption()
 {
 	QString filepath = QCoreApplication::applicationDirPath();
 	QFile loadFile(filepath + "/s" + QString::number(widgetId));
@@ -325,7 +325,7 @@ bool SerialPortManager::saveOption()
 	return true;
 }
 
-void SerialPortManager::addCommandSet(const CommandSet& commandSet)
+void SerialPort::addCommandSet(const CommandSet& commandSet)
 {
 	auto widget = new QWidget;
 	{
@@ -441,7 +441,7 @@ void SerialPortManager::addCommandSet(const CommandSet& commandSet)
 	layout->addWidget(widget);
 }
 
-bool SerialPortManager::loadCommandSets()
+bool SerialPort::loadCommandSets()
 {
 	QString filepath = QCoreApplication::applicationDirPath();
 
@@ -457,7 +457,7 @@ bool SerialPortManager::loadCommandSets()
 	return true;
 }
 
-bool SerialPortManager::saveCommandSets()
+bool SerialPort::saveCommandSets()
 {
 	QString filepath = QCoreApplication::applicationDirPath();
 
@@ -488,7 +488,7 @@ bool SerialPortManager::saveCommandSets()
 	return true;
 }
 
-void SerialPortManager::clearCommandSets()
+void SerialPort::clearCommandSets()
 {
 	auto layout = layoutCommandsSet();
 
@@ -502,7 +502,7 @@ void SerialPortManager::clearCommandSets()
 	commandsSetWidget.clear();
 }
 
-bool SerialPortManager::connect(QString portName, int baudRate, int mode)
+bool SerialPort::connect(QString portName, int baudRate, int mode)
 {
 	setPortName(portName);
 	setBaudRate(baudRate);
@@ -528,22 +528,22 @@ bool SerialPortManager::connect(QString portName, int baudRate, int mode)
 	return __super::open(QIODevice::ReadWrite);
 }
 
-bool SerialPortManager::isConnected()
+bool SerialPort::isConnected()
 {
 	return __super::isOpen();
 }
 
-void SerialPortManager::disconnect()
+void SerialPort::disconnect()
 {
 	__super::close();
 }
 
-void SerialPortManager::setAutoRead(bool enable)
+void SerialPort::setAutoRead(bool enable)
 {
 	autoRead = enable;
 }
 
-QByteArray SerialPortManager::read(qint64 maxlen)
+QByteArray SerialPort::read(qint64 maxlen)
 {
 	if (autoRead)
 		return QByteArray();
@@ -551,18 +551,18 @@ QByteArray SerialPortManager::read(qint64 maxlen)
 	return __super::read(maxlen);
 }
 
-qint64 SerialPortManager::write(const QByteArray& data)
+qint64 SerialPort::write(const QByteArray& data)
 {
 	return __super::write(data) == data.length();
 }
 
-bool SerialPortManager::write(char code)
+bool SerialPort::write(char code)
 {
 	putChar(code);
 	return waitForBytesWritten();
 }
 
-bool SerialPortManager::read(char& code, int timeout)
+bool SerialPort::read(char& code, int timeout)
 {
 	if (waitForReadyRead(timeout))
 	{

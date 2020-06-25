@@ -24,7 +24,7 @@
     <ClCompile Include="Dialog.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="SerialPortManager.cpp">
+    <ClCompile Include="SerialPort.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
@@ -38,10 +38,10 @@
     <ClInclude Include="Dialog.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="SerialPortManager.h">
+    <ClInclude Include="stdafx.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="stdafx.h">
+    <ClInclude Include="SerialPort.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

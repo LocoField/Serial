@@ -7,11 +7,11 @@ class QLayout;
 
 class CommandSet;
 
-class SerialPortManager final : protected QSerialPort
+class SerialPort final : protected QSerialPort
 {
 public:
-	SerialPortManager(int id = 0);
-	~SerialPortManager() = default;
+	SerialPort(int id = 0);
+	~SerialPort() = default;
 
 public:
 	static void availablePorts(std::vector<QString>& ports);

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Dialog.h"
-#include "SerialPortManager.h"
+#include "SerialPort.h"
 
 #define DIALOG_TITLE "LocoField Serial v.2.0"
 
@@ -160,7 +160,7 @@ bool Dialog::loadOption()
 
 	for (int i = 0; i < n; i++)
 	{
-		auto manager = new SerialPortManager(i);
+		auto manager = new SerialPort(i);
 		serialManagers.emplace_back(manager);
 		serialLayout->addWidget(manager->widgetSerial());
 	}
