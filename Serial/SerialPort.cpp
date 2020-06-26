@@ -192,7 +192,7 @@ void SerialPort::makeWidgets()
 			[this, lineEditSendCommand]()
 			{
 				QString command = lineEditSendCommand->text();
-				command.remove("\\s");
+				command.remove(QRegExp("\\s"));
 
 				QByteArray data;
 
@@ -371,10 +371,22 @@ void SerialPort::addCommandSet(const CommandSet& commandSet)
 			auto commandExecute = [&, lineEditCommand]()
 			{
 				QString command = lineEditCommand->text();
-				if (command.isEmpty())
-					return;
+				command.remove(QRegExp("\\s"));
 
-				lineEditCommand->returnPressed();
+				QByteArray data;
+
+				for( int index = 0; index < command.length(); index += 2 )
+				{
+					QString parsed = command.mid(index, 2);
+
+					auto value = QByteArray::fromHex(parsed.toLatin1());
+					data.append(value);
+				}
+
+				if( write(data) == false )
+				{
+					cout << "send failed: " << data.toStdString() << endl;
+				}
 			};
 
 			auto timer = new QTimer(buttonExecute);
