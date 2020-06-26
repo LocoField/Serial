@@ -5,7 +5,8 @@
 
 #include <thread>
 
-SerialAddinHelper::SerialAddinHelper()
+SerialAddinHelper::SerialAddinHelper(SerialAddinBase* addin)
+	: addin(addin)
 {
 }
 
@@ -16,9 +17,6 @@ SerialAddinHelper::~SerialAddinHelper()
 
 bool SerialAddinHelper::start()
 {
-	if (addin == nullptr)
-		return false;
-
 	for (auto& serialPort : serialPorts)
 	{
 		serialPort->setAutoRead(false);

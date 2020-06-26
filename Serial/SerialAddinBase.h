@@ -33,3 +33,5 @@ protected:
 	std::deque<MultiSerialData> recvQueue;
 
 };
+
+typedef SerialAddinBase* (*SerialAddin)();

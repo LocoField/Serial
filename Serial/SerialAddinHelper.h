@@ -6,7 +6,7 @@ class SerialPort;
 class SerialAddinHelper final
 {
 public:
-	SerialAddinHelper();
+	SerialAddinHelper(SerialAddinBase*);
 	~SerialAddinHelper();
 
 private:
@@ -26,7 +26,7 @@ public:
 protected:
 	void onThreadFunction();
 
-	SerialAddinBase* addin = nullptr;
+	SerialAddinBase* addin;
 	std::vector<SerialPort*> serialPorts;
 
 };
