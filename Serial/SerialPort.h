@@ -41,7 +41,7 @@ protected:
 public:
 	void setAutoRead(bool enable);
 
-	QByteArray read(qint64 maxlen);
+	QByteArray read(int timeout = 2000);
 	qint64 write(const QByteArray& data);
 
 	bool write(char code);

@@ -543,12 +543,17 @@ void SerialPort::setAutoRead(bool enable)
 	autoRead = enable;
 }
 
-QByteArray SerialPort::read(qint64 maxlen)
+QByteArray SerialPort::read(int timeout)
 {
 	if (autoRead)
 		return QByteArray();
 
-	return __super::read(maxlen);
+	if (waitForReadyRead(timeout))
+	{
+		return __super::readAll();
+	}
+
+	return QByteArray();
 }
 
 qint64 SerialPort::write(const QByteArray& data)
