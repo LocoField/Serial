@@ -29,6 +29,6 @@ private:
 	QHBoxLayout* helperLayout;
 	QHBoxLayout* serialLayout;
 
-	std::vector<SerialPort*> serialManagers;
+	std::vector<SerialPort*> serialPorts;
 
 };

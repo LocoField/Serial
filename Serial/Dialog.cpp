@@ -160,9 +160,10 @@ bool Dialog::loadOption()
 
 	for (int i = 0; i < n; i++)
 	{
-		auto manager = new SerialPort(i);
-		serialManagers.emplace_back(manager);
-		serialLayout->addWidget(manager->widgetSerial());
+		auto serialPort = new SerialPort(i);
+		serialPorts.emplace_back(serialPort);
+
+		serialLayout->addWidget(serialPort->widgetSerial());
 	}
 
 	return retval;
@@ -185,7 +186,7 @@ bool Dialog::saveOption()
 
 	QJsonObject object = doc.object();
 
-	object["device_n"] = (int)serialManagers.size();
+	object["device_n"] = (int)serialPorts.size();
 
 	object["dialog_x"] = xy.x();
 	object["dialog_y"] = xy.y();
@@ -229,12 +230,12 @@ void Dialog::closeEvent(QCloseEvent* event)
 {
 	saveOption();
 
-	for (auto& manager : serialManagers)
+	for (auto& serialPort : serialPorts)
 	{
-		delete manager;
+		delete serialPort;
 	}
 
-	serialManagers.clear();
+	serialPorts.clear();
 
 	__super::closeEvent(event);
 }
