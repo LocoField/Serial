@@ -46,11 +46,13 @@ void SerialAddinHelper::onThreadFunction()
 {
 	while (running)
 	{
-		for (size_t i = 0; i < serialPorts.size(); i++)
+		for( size_t i = 0; i < serialPorts.size();)
 		{
 			QByteArray buffer = serialPorts[i]->read(1);
-			if (buffer.isEmpty())
-				continue;
+			if( buffer.isEmpty() )
+			{
+				i++;
+			}
 
 			addin->recvQueue.push_back({ i, {buffer.begin(), buffer.end()} });
 		}
