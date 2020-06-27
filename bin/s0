@@ -1,0 +1,5 @@
+{
+    "default_baudrate": 0,
+    "default_port": "COM12",
+    "default_protocol": 2
+}
