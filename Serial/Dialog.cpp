@@ -129,6 +129,13 @@ void Dialog::initialize()
 
 			SerialAddinHelper addinHelper(object);
 			addinHelper.start();
+
+			while (addinHelper.isRunning())
+			{
+				Sleep(1000);
+			}
+
+			delete object;
 		});
 
 		menuAddin->addAction(actionLoadAddin);

@@ -15,35 +15,29 @@ SerialAddinHelper::~SerialAddinHelper()
 	stop();
 }
 
-bool SerialAddinHelper::start()
+void SerialAddinHelper::start()
+{
+	running = true;
+	std::thread(onThread, this).detach();
+}
+
+void SerialAddinHelper::stop()
+{
+	running = false;
+}
+
+bool SerialAddinHelper::isRunning()
+{
+	return running;
+}
+
+void SerialAddinHelper::onThreadFunction()
 {
 	for (auto& serialPort : serialPorts)
 	{
 		serialPort->setAutoRead(false);
 	}
 
-	running = true;
-	finished = false;
-	std::thread(onThread, this).detach();
-
-	return true;
-}
-
-void SerialAddinHelper::stop()
-{
-	running = false;
-
-	while (finished == false)
-		Sleep(100);
-
-	for (auto& serialPort : serialPorts)
-	{
-		serialPort->setAutoRead(true);
-	}
-}
-
-void SerialAddinHelper::onThreadFunction()
-{
 	while (running)
 	{
 		for( size_t i = 0; i < serialPorts.size();)
@@ -59,6 +53,9 @@ void SerialAddinHelper::onThreadFunction()
 
 		addin->callback();
 
+		if (addin->status() < 0)
+			break;
+
 		while (addin->sendQueue.size() > 0)
 		{
 			auto& data = addin->sendQueue.front();
@@ -66,5 +63,10 @@ void SerialAddinHelper::onThreadFunction()
 		}
 	}
 
-	finished = true;
+	running = false;
+
+	for (auto& serialPort : serialPorts)
+	{
+		serialPort->setAutoRead(true);
+	}
 }

@@ -11,7 +11,6 @@ public:
 
 private:
 	bool running = false;
-	bool finished = true;
 
 	static void onThread(void* arg)
 	{
@@ -20,8 +19,9 @@ private:
 	}
 
 public:
-	bool start();
+	void start();
 	void stop();
+	bool isRunning();
 
 protected:
 	void onThreadFunction();

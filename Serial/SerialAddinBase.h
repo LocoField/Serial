@@ -21,6 +21,8 @@ class SerialAddinBase
 
 protected:
 	SerialAddinBase() = default;
+
+public:
 	virtual ~SerialAddinBase() = default;
 
 public:
