@@ -116,9 +116,15 @@ void Dialog::initialize()
 		connect(actionLoadAddin, &QAction::triggered, [&]()
 		{
 			// test
-			HMODULE module = LoadLibraryA((QCoreApplication::applicationDirPath() + "/SerialAddinTemplate.dll").toStdString().c_str());
+			HMODULE module = LoadLibraryA((QCoreApplication::applicationDirPath() + "/SerialAddin.dll").toStdString().c_str());
 
 			SerialAddin loadAddin = reinterpret_cast<SerialAddin>(GetProcAddress(module, "loadAddin"));
+			if( loadAddin == nullptr )
+			{
+				cout << "ERROR: invalid addin." << endl;
+				return;
+			}
+
 			SerialAddinBase* object = loadAddin();
 
 			SerialAddinHelper addinHelper(object);
