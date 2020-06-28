@@ -122,6 +122,8 @@ void Dialog::initialize()
 			if( loadAddin == nullptr )
 			{
 				cout << "ERROR: invalid addin." << endl;
+
+				FreeLibrary(module);
 				return;
 			}
 
@@ -136,6 +138,7 @@ void Dialog::initialize()
 			}
 
 			delete object;
+			FreeLibrary(module);
 		});
 
 		menuAddin->addAction(actionLoadAddin);
