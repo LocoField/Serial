@@ -130,12 +130,7 @@ void Dialog::initialize()
 			SerialAddinBase* object = loadAddin();
 
 			SerialAddinHelper addinHelper(object);
-			addinHelper.start();
-
-			while (addinHelper.isRunning())
-			{
-				Sleep(1000);
-			}
+			addinHelper.execute();
 
 			delete object;
 			FreeLibrary(module);

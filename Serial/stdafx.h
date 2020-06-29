@@ -24,11 +24,10 @@
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QCheckBox>
-
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QSpinBox>
-
 #include <QtWidgets/QMenuBar>
+#include <QtWidgets/QProgressDialog>
 
 #include <QtGui/QValidator>
 #include <QtGui/QKeyEvent>

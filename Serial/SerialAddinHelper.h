@@ -3,30 +3,24 @@
 class SerialAddinBase;
 class SerialPort;
 
-class SerialAddinHelper final
+class SerialAddinHelper final : public QObject
 {
 public:
 	SerialAddinHelper(SerialAddinBase*);
 	~SerialAddinHelper();
 
-private:
-	bool running = false;
-
-	static void onThread(void* arg)
-	{
-		SerialAddinHelper* pClass = reinterpret_cast<SerialAddinHelper*>(arg);
-		pClass->onThreadFunction();
-	}
-
 public:
-	void start();
-	void stop();
-	bool isRunning();
+	void execute();
 
 protected:
-	void onThreadFunction();
+	void perform();
+	void finish();
 
+private:
 	SerialAddinBase* addin;
 	std::vector<SerialPort*> serialPorts;
+
+	QProgressDialog* dialog;
+	QTimer* timer;
 
 };
