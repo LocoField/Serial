@@ -3,12 +3,6 @@
 #include <deque>
 #include <vector>
 
-enum class AddinType
-{
-	ADDIN_TYPE_PROGRESS,
-	ADDIN_TYPE_LOOP,
-};
-
 struct MultiSerialData
 {
 	size_t index;
@@ -26,8 +20,9 @@ public:
 	virtual ~SerialAddinBase() = default;
 
 public:
-	virtual AddinType type() abstract;
-	virtual int status() abstract;
+	virtual int maximum() abstract;
+	virtual int value() abstract;
+	virtual bool finished() abstract;
 	virtual void callback() abstract;
 
 protected:
