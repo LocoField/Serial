@@ -28,6 +28,7 @@
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QProgressDialog>
+#include <QtWidgets/QFileDialog>
 
 #include <QtGui/QValidator>
 #include <QtGui/QKeyEvent>

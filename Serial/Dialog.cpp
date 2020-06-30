@@ -112,14 +112,12 @@ void Dialog::initialize()
 
 	QMenu* menuAddin = new QMenu("Addin");
 	{
-		QAction* actionLoadAddin = new QAction("Load");
-		connect(actionLoadAddin, &QAction::triggered, [&]()
+		auto executeAddin = [](const std::string& filePath)
 		{
-			// test
-			HMODULE module = LoadLibraryA((QCoreApplication::applicationDirPath() + "/SerialAddin.dll").toStdString().c_str());
+			HMODULE module = LoadLibraryA(filePath.c_str());
 
 			SerialAddin loadAddin = reinterpret_cast<SerialAddin>(GetProcAddress(module, "loadAddin"));
-			if( loadAddin == nullptr )
+			if (loadAddin == nullptr)
 			{
 				cout << "ERROR: invalid addin." << endl;
 
@@ -134,6 +132,17 @@ void Dialog::initialize()
 
 			delete object;
 			FreeLibrary(module);
+		};
+
+		QAction* actionLoadAddin = new QAction("Load");
+		connect(actionLoadAddin, &QAction::triggered, [&]()
+		{
+			QString addinPath = QFileDialog::getOpenFileName(this, "Load Addin", QCoreApplication::applicationDirPath(), "Addins (*.dll)");
+
+			if (addinPath.isEmpty())
+				return;
+
+			executeAddin(addinPath.toStdString());
 		});
 
 		menuAddin->addAction(actionLoadAddin);
