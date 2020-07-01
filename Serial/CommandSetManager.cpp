@@ -49,6 +49,7 @@ bool CommandSetManager::loadFromFile(const QString& filepath, std::vector<Comman
 		commandSet.shortcut = object["shortcut"].toString();
 		commandSet.timer = object["timer"].toInt();
 		commandSet.count = object["count"].toInt();
+		commandSet.inputAscii = object["ascii"].toBool();
 
 		commandSets.push_back(commandSet);
 	}
@@ -71,6 +72,7 @@ bool CommandSetManager::saveToFile(const QString& filepath, const std::vector<Co
 		object["shortcut"] = commandSet.shortcut;
 		object["timer"] = commandSet.timer;
 		object["count"] = commandSet.count;
+		object["ascii"] = commandSet.inputAscii;
 
 		jsonArray.push_back(object);
 	}

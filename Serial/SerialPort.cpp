@@ -329,6 +329,13 @@ void SerialPort::addCommandSet(const CommandSet& commandSet)
 {
 	auto widget = new QWidget;
 	{
+		auto checkAsciiCommand = new QCheckBox("ASCII");
+		{
+			checkAsciiCommand->setChecked(commandSet.inputAscii);
+			checkAsciiCommand->setFixedWidth(60);
+			checkAsciiCommand->setDisabled(true);
+		}
+
 		auto labelComment = new QLabel;
 		{
 			labelComment->setObjectName("labelComment");
@@ -368,19 +375,27 @@ void SerialPort::addCommandSet(const CommandSet& commandSet)
 			buttonExecute->setText("Send");
 			buttonExecute->setShortcut(QKeySequence(commandSet.shortcut));
 
-			auto commandExecute = [&, lineEditCommand]()
+			auto commandExecute = [&, checkAsciiCommand, lineEditCommand]()
 			{
 				QString command = lineEditCommand->text();
-				command.remove(QRegExp("\\s"));
-
 				QByteArray data;
 
-				for (int index = 0; index < command.length(); index += 2)
+				if (checkAsciiCommand->isChecked())
 				{
-					QString parsed = command.mid(index, 2);
+					data = command.toLocal8Bit();
+				}
+				else
+				{
+					
+					command.remove(QRegExp("\\s"));
 
-					auto value = QByteArray::fromHex(parsed.toLatin1());
-					data.append(value);
+					for (int index = 0; index < command.length(); index += 2)
+					{
+						QString parsed = command.mid(index, 2);
+
+						auto value = QByteArray::fromHex(parsed.toLatin1());
+						data.append(value);
+					}
 				}
 
 				if (write(data) == false)
@@ -438,6 +453,7 @@ void SerialPort::addCommandSet(const CommandSet& commandSet)
 		}
 
 		auto layoutWidget = new QHBoxLayout;
+		layoutWidget->addWidget(checkAsciiCommand);
 		layoutWidget->addWidget(labelComment);
 		layoutWidget->addWidget(lineEditCommand);
 		layoutWidget->addWidget(spinBoxTimer);
