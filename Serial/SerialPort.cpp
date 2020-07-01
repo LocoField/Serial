@@ -34,7 +34,7 @@ SerialPort::SerialPort(int id)
 
 	QObject::connect(this, &QSerialPort::errorOccurred, [&](QSerialPort::SerialPortError error)
 	{
-		if( error == QSerialPort::SerialPortError::ResourceError )
+		if (error == QSerialPort::SerialPortError::ResourceError)
 		{
 			auto widget = serialWidget->findChild<QPushButton*>("pushButtonConnect");
 			if (widget)
@@ -375,7 +375,7 @@ void SerialPort::addCommandSet(const CommandSet& commandSet)
 
 				QByteArray data;
 
-				for( int index = 0; index < command.length(); index += 2 )
+				for (int index = 0; index < command.length(); index += 2)
 				{
 					QString parsed = command.mid(index, 2);
 
@@ -383,7 +383,7 @@ void SerialPort::addCommandSet(const CommandSet& commandSet)
 					data.append(value);
 				}
 
-				if( write(data) == false )
+				if (write(data) == false)
 				{
 					cout << "send failed: " << data.toStdString() << endl;
 				}
