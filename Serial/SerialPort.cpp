@@ -331,6 +331,7 @@ void SerialPort::addCommandSet(const CommandSet& commandSet)
 	{
 		auto checkAsciiCommand = new QCheckBox("ASCII");
 		{
+			checkAsciiCommand->setObjectName("checkAsciiCommand");
 			checkAsciiCommand->setChecked(commandSet.inputAscii);
 			checkAsciiCommand->setFixedWidth(60);
 			checkAsciiCommand->setDisabled(true);
@@ -494,6 +495,7 @@ bool SerialPort::saveCommandSets()
 
 	for (auto& widget : commandsSetWidget)
 	{
+		auto checkAsciiCommand = widget->findChild<QCheckBox*>("checkAsciiCommand");
 		auto labelComment = widget->findChild<QLabel*>("labelComment");
 		auto lineEditCommand = widget->findChild<QLineEdit*>("lineEditCommand");
 		auto spinBoxTimer = widget->findChild<QSpinBox*>("spinBoxTimer");
@@ -506,6 +508,7 @@ bool SerialPort::saveCommandSets()
 		commandSet.shortcut = buttonExecute->shortcut().toString();
 		commandSet.timer = spinBoxTimer->value();
 		commandSet.count = spinBoxCount->value();
+		commandSet.inputAscii = checkAsciiCommand->isChecked();
 
 		commandSets.push_back(commandSet);
 	}
