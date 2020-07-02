@@ -11,6 +11,7 @@ public:
 	int timer = 1000;
 	int count = 0;
 	bool inputAscii;
+	bool edit;
 };
 
 class CommandSetManager

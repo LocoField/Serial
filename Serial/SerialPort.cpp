@@ -334,7 +334,7 @@ void SerialPort::addCommandSet(const CommandSet& commandSet)
 			checkAsciiCommand->setObjectName("checkAsciiCommand");
 			checkAsciiCommand->setChecked(commandSet.inputAscii);
 			checkAsciiCommand->setFixedWidth(60);
-			checkAsciiCommand->setDisabled(true);
+			checkAsciiCommand->setEnabled(commandSet.edit);
 		}
 
 		auto labelComment = new QLabel;
@@ -349,7 +349,7 @@ void SerialPort::addCommandSet(const CommandSet& commandSet)
 			lineEditCommand->setObjectName("lineEditCommand");
 			lineEditCommand->setText(commandSet.command);
 			lineEditCommand->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-			lineEditCommand->setDisabled(true);
+			lineEditCommand->setEnabled(commandSet.edit);
 		}
 
 		auto spinBoxTimer = new QSpinBox;
@@ -358,7 +358,7 @@ void SerialPort::addCommandSet(const CommandSet& commandSet)
 			spinBoxTimer->setRange(100, 10000);
 			spinBoxTimer->setSingleStep(100);
 			spinBoxTimer->setValue(commandSet.timer);
-			spinBoxTimer->setDisabled(true);
+			spinBoxTimer->setEnabled(commandSet.edit);
 		}
 
 		auto spinBoxCount = new QSpinBox;
@@ -367,7 +367,7 @@ void SerialPort::addCommandSet(const CommandSet& commandSet)
 			spinBoxCount->setRange(0, 1000);
 			spinBoxCount->setSingleStep(1);
 			spinBoxCount->setValue(commandSet.count);
-			spinBoxCount->setDisabled(true);
+			spinBoxCount->setEnabled(commandSet.edit);
 		}
 
 		auto buttonExecute = new QPushButton;
