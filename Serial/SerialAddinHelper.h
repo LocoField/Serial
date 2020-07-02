@@ -14,7 +14,7 @@ public:
 
 protected:
 	void perform();
-	void finish();
+	void cancel();
 
 private:
 	SerialAddinBase* addin;

@@ -23,15 +23,21 @@ void SerialAddinHelper::execute()
 	dialog = new QProgressDialog("Addin is running ...", "Cancel", 0, 100);
 	dialog->setAutoReset(false);
 	dialog->setMaximum(addin->maximum());
-	QObject::connect(dialog, &QProgressDialog::canceled, this, &SerialAddinHelper::finish);
+	QObject::connect(dialog, &QProgressDialog::canceled, this, &SerialAddinHelper::cancel);
 
 	timer = new QTimer(this);
 	QObject::connect(timer, &QTimer::timeout, this, &SerialAddinHelper::perform);
 
 	timer->start(0);
+
 	dialog->exec();
 
-	finish();
+	timer->stop();
+
+	for (auto& serialPort : serialPorts)
+	{
+		serialPort->setAutoRead(true);
+	}
 }
 
 void SerialAddinHelper::perform()
@@ -65,12 +71,7 @@ void SerialAddinHelper::perform()
 	}
 }
 
-void SerialAddinHelper::finish()
+void SerialAddinHelper::cancel()
 {
-	timer->stop();
-
-	for (auto& serialPort : serialPorts)
-	{
-		serialPort->setAutoRead(true);
-	}
+	addin->cancel();
 }

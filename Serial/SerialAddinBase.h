@@ -22,7 +22,10 @@ public:
 public:
 	virtual int maximum() abstract;
 	virtual int value() abstract;
+
+	virtual void cancel() abstract;
 	virtual bool finished() abstract;
+
 	virtual void callback() abstract;
 
 protected:
