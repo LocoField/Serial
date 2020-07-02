@@ -13,12 +13,19 @@ SerialPort::SerialPort(int id)
 			return;
 
 		QByteArray data = readAll();
+		QString command;
 
-		auto widget = serialWidget->findChild<QListWidget*>("listCommands");
-		if (widget)
+		bool convertHex = true;
+
+		auto widgetCheck = serialWidget->findChild<QCheckBox*>("checkAsciiRead");
+		if (widgetCheck)
 		{
-			QString command;
+			if (widgetCheck->isChecked())
+				convertHex = false;
+		}
 
+		if (convertHex)
+		{
 			for (auto it = data.cbegin(); it != data.cend(); ++it)
 			{
 				unsigned char hex = *it;
@@ -26,9 +33,21 @@ SerialPort::SerialPort(int id)
 
 				command.append(hex_format);
 			}
+		}
+		else
+		{
+			command = data;
+		}
 
-			widget->addItem(command);
-			widget->setCurrentRow(widget->count() - 1);
+		auto widgetList = serialWidget->findChild<QListWidget*>("listCommands");
+		if (widgetList)
+		{
+			widgetList->addItem(command);
+			widgetList->setCurrentRow(widgetList->count() - 1);
+		}
+		else
+		{
+			cout << "recv: " << command.toStdString() << endl;
 		}
 	});
 
@@ -96,6 +115,7 @@ void SerialPort::makeWidgets()
 		auto comboBoxProtocol = new QComboBox;
 		auto pushButtonConnect = new QPushButton("Connect");
 		auto horizontalSpacer = new QSpacerItem(40, 10, QSizePolicy::Expanding, QSizePolicy::Minimum);
+		auto checkAsciiRead = new QCheckBox("ASCII");
 		auto buttonCommandsClear = new QPushButton("Clear");
 
 		auto listCommands = new QListWidget;
@@ -114,7 +134,9 @@ void SerialPort::makeWidgets()
 		pushButtonConnect->setCheckable(true);
 		pushButtonConnect->setObjectName("pushButtonConnect");
 
-		listCommands->setMinimumSize(600, 300);
+		checkAsciiRead->setObjectName("checkAsciiRead");
+
+		listCommands->setMinimumSize(600, 200);
 		listCommands->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 		listCommands->setObjectName("listCommands");
 
@@ -126,6 +148,7 @@ void SerialPort::makeWidgets()
 		horizontalLayout->addWidget(comboBoxProtocol);
 		horizontalLayout->addWidget(pushButtonConnect);
 		horizontalLayout->addItem(horizontalSpacer);
+		horizontalLayout->addWidget(checkAsciiRead);
 		horizontalLayout->addWidget(buttonCommandsClear);
 
 		verticalLayout->addLayout(horizontalLayout);
@@ -349,6 +372,7 @@ void SerialPort::addCommandSet(const CommandSet& commandSet)
 			lineEditCommand->setObjectName("lineEditCommand");
 			lineEditCommand->setText(commandSet.command);
 			lineEditCommand->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+			lineEditCommand->setAlignment(Qt::AlignRight);
 			lineEditCommand->setEnabled(commandSet.edit);
 		}
 
