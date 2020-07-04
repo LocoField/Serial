@@ -6,7 +6,7 @@
 struct MultiSerialData
 {
 	size_t index;
-	std::vector<char> buffer;
+	std::vector<unsigned char> buffer;
 };
 
 class SerialAddinBase
