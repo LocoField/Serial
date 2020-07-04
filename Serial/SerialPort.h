@@ -35,10 +35,11 @@ protected:
 
 protected:
 	bool connect(QString portName, int baudRate, int mode = 0);
-	bool isConnected();
 	void disconnect();
 
 public:
+	bool isConnected();
+
 	void setAutoRead(bool enable);
 
 	QByteArray read(int timeout = 2000);

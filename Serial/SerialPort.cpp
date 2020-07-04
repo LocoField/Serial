@@ -583,14 +583,14 @@ bool SerialPort::connect(QString portName, int baudRate, int mode)
 	return __super::open(QIODevice::ReadWrite);
 }
 
-bool SerialPort::isConnected()
-{
-	return __super::isOpen();
-}
-
 void SerialPort::disconnect()
 {
 	__super::close();
+}
+
+bool SerialPort::isConnected()
+{
+	return __super::isOpen();
 }
 
 void SerialPort::setAutoRead(bool enable)
