@@ -10,6 +10,7 @@ public:
 	~SerialAddinHelper();
 
 public:
+	void setSerialPorts(const std::vector<SerialPort*>& serialPorts);
 	void execute();
 
 protected:

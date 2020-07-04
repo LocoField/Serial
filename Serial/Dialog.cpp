@@ -112,7 +112,7 @@ void Dialog::initialize()
 
 	QMenu* menuAddin = new QMenu("Addin");
 	{
-		auto executeAddin = [](const std::string& filePath)
+		auto executeAddin = [](const std::string& filePath, std::vector<SerialPort*>& serialPorts)
 		{
 			HMODULE module = LoadLibraryA(filePath.c_str());
 
@@ -128,6 +128,7 @@ void Dialog::initialize()
 			SerialAddinBase* object = loadAddin();
 
 			SerialAddinHelper addinHelper(object);
+			addinHelper.setSerialPorts(serialPorts);
 			addinHelper.execute();
 
 			delete object;
@@ -135,14 +136,14 @@ void Dialog::initialize()
 		};
 
 		QAction* actionLoadAddin = new QAction("Load");
-		connect(actionLoadAddin, &QAction::triggered, [&]()
+		connect(actionLoadAddin, &QAction::triggered, [&, this]()
 		{
 			QString addinPath = QFileDialog::getOpenFileName(this, "Load Addin", QCoreApplication::applicationDirPath(), "Addins (*.dll)");
 
 			if (addinPath.isEmpty())
 				return;
 
-			executeAddin(addinPath.toStdString());
+			executeAddin(addinPath.toStdString(), serialPorts);
 		});
 
 		menuAddin->addAction(actionLoadAddin);

@@ -13,6 +13,11 @@ SerialAddinHelper::~SerialAddinHelper()
 {
 }
 
+void SerialAddinHelper::setSerialPorts(const std::vector<SerialPort*>& serialPorts)
+{
+	this->serialPorts = serialPorts;
+}
+
 void SerialAddinHelper::execute()
 {
 	for (auto& serialPort : serialPorts)
@@ -46,17 +51,6 @@ void SerialAddinHelper::execute()
 
 void SerialAddinHelper::perform()
 {
-	for (size_t i = 0; i < serialPorts.size(); )
-	{
-		QByteArray buffer = serialPorts[i]->read(1);
-		if (buffer.isEmpty())
-		{
-			i++;
-		}
-
-		addin->recvQueue.push_back({ i, { buffer.begin(), buffer.end() } });
-	}
-
 	addin->callback();
 
 	int value = addin->value();
@@ -64,8 +58,18 @@ void SerialAddinHelper::perform()
 
 	while (addin->sendQueue.size() > 0)
 	{
-		auto& data = addin->sendQueue.front();
-		serialPorts[data.index]->write({ data.buffer.data(), (int) data.buffer.size() });
+		auto& sendData = addin->sendQueue.front();
+
+		size_t i = sendData.index;
+		if (serialPorts[i]->isConnected())
+		{
+			serialPorts[i]->write({ (char*)sendData.buffer.data(), (int)sendData.buffer.size() });
+
+			QByteArray recvData = serialPorts[i]->read();
+			addin->recvQueue.push_back({ i, { recvData.begin(), recvData.end() } });
+		}
+
+		addin->sendQueue.pop_front();
 	}
 }
 
@@ -76,18 +80,17 @@ void SerialAddinHelper::cancel()
 
 	while (addin->sendQueue.size() > 0)
 	{
-		auto& data = addin->sendQueue.front();
-		serialPorts[data.index]->write({ data.buffer.data(), (int) data.buffer.size() });
-	}
+		auto& sendData = addin->sendQueue.front();
 
-	for (size_t i = 0; i < serialPorts.size(); )
-	{
-		QByteArray buffer = serialPorts[i]->read(1);
-		if (buffer.isEmpty())
+		size_t i = sendData.index;
+		if (serialPorts[i]->isConnected())
 		{
-			i++;
+			serialPorts[i]->write({ (char*)sendData.buffer.data(), (int)sendData.buffer.size() });
+
+			QByteArray recvData = serialPorts[i]->read();
+			addin->recvQueue.push_back({ i, { recvData.begin(), recvData.end() } });
 		}
 
-		addin->recvQueue.push_back({ i,{ buffer.begin(), buffer.end() } });
+		addin->sendQueue.pop_front();
 	}
 }
