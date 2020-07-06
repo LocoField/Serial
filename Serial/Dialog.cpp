@@ -138,10 +138,16 @@ void Dialog::initialize()
 		QAction* actionLoadAddin = new QAction("Load");
 		connect(actionLoadAddin, &QAction::triggered, [&, this]()
 		{
-			QString addinPath = QFileDialog::getOpenFileName(this, "Load Addin", QCoreApplication::applicationDirPath(), "Addins (*.dll)");
+			if (lastFileDialogPath.isEmpty())
+				lastFileDialogPath = QCoreApplication::applicationDirPath();
+
+			QString addinPath = QFileDialog::getOpenFileName(this, "Load Addin", lastFileDialogPath, "Addins (*.dll)");
 
 			if (addinPath.isEmpty())
 				return;
+
+			QFileInfo fileInfo(addinPath);
+			lastFileDialogPath = fileInfo.dir().absolutePath();
 
 			executeAddin(addinPath.toStdString(), serialPorts);
 		});
