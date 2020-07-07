@@ -51,6 +51,12 @@ void SerialAddinHelper::execute()
 
 void SerialAddinHelper::perform()
 {
+	if (addin->finished())
+	{
+		dialog->cancel();
+		return;
+	}
+
 	addin->callback();
 
 	int value = addin->value();
