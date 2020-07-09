@@ -66,13 +66,17 @@ void SerialAddinHelper::perform()
 	{
 		auto& sendData = addin->sendQueue.front();
 
-		size_t i = sendData.index;
-		if (serialPorts[i]->isConnected())
+		int index = sendData.index;
+		if (index < 0)
 		{
-			serialPorts[i]->write({ (char*)sendData.buffer.data(), (int)sendData.buffer.size() });
-
-			QByteArray recvData = serialPorts[i]->read();
-			addin->recvQueue.push_back({ i, { recvData.begin(), recvData.end() } });
+			for (int i = 0; i < (int)serialPorts.size(); i++)
+			{
+				writeAndRead(i, sendData.buffer);
+			}
+		}
+		else
+		{
+			writeAndRead(index, sendData.buffer);
 		}
 
 		addin->sendQueue.pop_front();
@@ -88,15 +92,33 @@ void SerialAddinHelper::cancel()
 	{
 		auto& sendData = addin->sendQueue.front();
 
-		size_t i = sendData.index;
-		if (serialPorts[i]->isConnected())
+		int index = sendData.index;
+		if (index < 0)
 		{
-			serialPorts[i]->write({ (char*)sendData.buffer.data(), (int)sendData.buffer.size() });
-
-			QByteArray recvData = serialPorts[i]->read();
-			addin->recvQueue.push_back({ i, { recvData.begin(), recvData.end() } });
+			for (int i = 0; i < (int)serialPorts.size(); i++)
+			{
+				writeAndRead(i, sendData.buffer);
+			}
+		}
+		else
+		{
+			writeAndRead(index, sendData.buffer);
 		}
 
 		addin->sendQueue.pop_front();
 	}
+}
+
+void SerialAddinHelper::writeAndRead(int i, const std::vector<unsigned char>& data)
+{
+	if (i < 0 || i >= serialPorts.size())
+		return;
+
+	if (serialPorts[i]->isConnected() == false)
+		return;
+
+	serialPorts[i]->write({ (char*)data.data(), (int)data.size() });
+
+	QByteArray recvData = serialPorts[i]->read();
+	addin->recvQueue.push_back({ i, { recvData.begin(), recvData.end() } });
 }

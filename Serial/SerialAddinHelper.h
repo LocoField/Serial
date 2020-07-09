@@ -18,6 +18,9 @@ protected:
 	void cancel();
 
 private:
+	void writeAndRead(int i, const std::vector<unsigned char>& data);
+
+private:
 	SerialAddinBase* addin;
 	std::vector<SerialPort*> serialPorts;
 

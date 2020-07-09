@@ -5,7 +5,7 @@
 
 struct MultiSerialData
 {
-	size_t index;
+	int index;
 	std::vector<unsigned char> buffer;
 };
 
