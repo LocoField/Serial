@@ -86,26 +86,30 @@ void SerialAddinHelper::perform()
 void SerialAddinHelper::cancel()
 {
 	addin->cancel();
-	addin->callback();
 
-	while (addin->sendQueue.size() > 0)
+	while (addin->finished() == false)
 	{
-		auto& sendData = addin->sendQueue.front();
+		addin->callback();
 
-		int index = sendData.index;
-		if (index < 0)
+		while (addin->sendQueue.size() > 0)
 		{
-			for (int i = 0; i < (int)serialPorts.size(); i++)
+			auto& sendData = addin->sendQueue.front();
+
+			int index = sendData.index;
+			if (index < 0)
 			{
-				writeAndRead(i, sendData.buffer);
+				for (int i = 0; i < (int)serialPorts.size(); i++)
+				{
+					writeAndRead(i, sendData.buffer);
+				}
 			}
-		}
-		else
-		{
-			writeAndRead(index, sendData.buffer);
-		}
+			else
+			{
+				writeAndRead(index, sendData.buffer);
+			}
 
-		addin->sendQueue.pop_front();
+			addin->sendQueue.pop_front();
+		}
 	}
 }
 
