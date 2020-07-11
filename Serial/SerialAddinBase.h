@@ -29,6 +29,9 @@ public:
 	virtual void callback() abstract;
 
 protected:
+	virtual int checkCompleteData(const std::vector<unsigned char>& data) { return -1; }
+
+protected:
 	std::deque<MultiSerialData> sendQueue;
 	std::deque<MultiSerialData> recvQueue;
 

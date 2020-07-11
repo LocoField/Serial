@@ -113,7 +113,7 @@ void SerialAddinHelper::cancel()
 	}
 }
 
-void SerialAddinHelper::writeAndRead(int i, const std::vector<unsigned char>& data)
+void SerialAddinHelper::writeAndRead(int i, const std::vector<unsigned char>& sendData)
 {
 	if (i < 0 || i >= serialPorts.size())
 		return;
@@ -121,8 +121,27 @@ void SerialAddinHelper::writeAndRead(int i, const std::vector<unsigned char>& da
 	if (serialPorts[i]->isConnected() == false)
 		return;
 
-	serialPorts[i]->write({ (char*)data.data(), (int)data.size() });
+	serialPorts[i]->write({ (char*)sendData.data(), (int)sendData.size() });
 
-	QByteArray recvData = serialPorts[i]->read();
-	addin->recvQueue.push_back({ i, { recvData.begin(), recvData.end() } });
+	std::vector<unsigned char> recvData;
+
+	while (1)
+	{
+		QByteArray received = serialPorts[i]->read();
+		if (received.isEmpty())
+			break;
+
+		std::vector<unsigned char> data = { received.begin(), received.end() };
+
+		int length = addin->checkCompleteData(data);
+		if (length > 0)
+		{
+			recvData.insert(recvData.end(), data.cbegin(), data.cbegin() + length);
+			break;
+		}
+
+		recvData.insert(recvData.end(), data.cbegin(), data.cend());
+	}
+
+	addin->recvQueue.push_back({ i, recvData });
 }
