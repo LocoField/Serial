@@ -1,42 +1,51 @@
 [
-    {
-        "command": "01 06 00 47 7B FF 5B 6F",
-        "comment": "Pn071 ptrigger",
+	{
+        "command": "01 08 00 00 86 31 43 BF",
+        "comment": "TEST",
         "count": 0,
-        "shortcut": "Ctrl+5",
-        "timer": 1000
+        "shortcut": "",
+        "timer": 1000,
+		"edit": true,
+		"ascii": false
     },
     {
         "command": "01 06 00 47 77 FF 5E 6F",
-        "comment": "Pn071 stop",
+        "comment": "stop 0",
         "count": 0,
         "shortcut": "Ctrl+4",
         "timer": 1000
     },
 	{
-        "command": "01 10 00 78 00 02 04 00 00 FF 9C B4 B4",
-        "comment": "position -100",
+        "command": "01 06 00 47 7B FF 5B 6F",
+        "comment": "trigger 0",
+        "count": 0,
+        "shortcut": "Ctrl+5",
+        "timer": 1000
+    },
+    {
+        "command": "01 06 00 47 76 FF 5F FF",
+        "comment": "stop 1",
         "count": 0,
         "shortcut": "",
         "timer": 1000
     },
 	{
-        "command": "01 10 00 78 00 02 04 00 00 00 64 F4 C6",
-        "comment": "position 100",
+        "command": "01 06 00 47 7A FF 5A FF",
+        "comment": "trigger 1",
+        "count": 0,
+        "shortcut": "",
+        "timer": 1000
+    },
+	{
+        "command": "01 10 00 78 00 02 04 00 00 FF 9C B4 B4",
+        "comment": "position 0 -100",
         "count": 0,
         "shortcut": "",
         "timer": 1000
     },
     {
-        "command": "01 10 00 78 00 02 04 00 00 EC 78 B9 CF",
-        "comment": "position -5000",
-        "count": 0,
-        "shortcut": "",
-        "timer": 1000
-    },
-	{
-        "command": "01 10 00 78 00 02 04 00 00 13 88 F8 7B",
-        "comment": "position 5000",
+        "command": "01 10 00 7A 00 02 04 00 00 FC 18 35 FE",
+        "comment": "position 1 -1000",
         "count": 0,
         "shortcut": "",
         "timer": 1000
@@ -59,7 +68,7 @@
         "command": "01 06 00 46 7F B2 C8 5A",
         "comment": "Emergency OFF",
         "count": 0,
-        "shortcut": "",
+        "shortcut": "Ctrl+2",
         "timer": 1000
     }
 ]

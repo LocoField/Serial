@@ -1,0 +1,8 @@
+{
+    "device_n": 1,
+    "dialog_h": 945,
+    "dialog_w": 820,
+    "dialog_x": 100,
+    "dialog_y": 100,
+    "file_path": ""
+}
