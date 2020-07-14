@@ -613,13 +613,16 @@ QByteArray SerialPort::read(int timeout)
 
 qint64 SerialPort::write(const QByteArray& data)
 {
-	return __super::write(data) == data.length();
+	qint64 retval = __super::write(data);
+	waitForBytesWritten();
+	return retval;
 }
 
 bool SerialPort::write(char code)
 {
-	putChar(code);
-	return waitForBytesWritten();
+	bool re = putChar(code);
+	waitForBytesWritten();
+	return re;
 }
 
 bool SerialPort::read(char& code, int timeout)
