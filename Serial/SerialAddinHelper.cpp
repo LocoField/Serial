@@ -36,11 +36,6 @@ void SerialAddinHelper::execute()
 
 	dialog->exec();
 
-	while (addin->finished() == false)
-	{
-		Sleep(1000);
-	}
-
 	timer->stop();
 
 	for (auto& serialPort : serialPorts)
@@ -122,6 +117,7 @@ void SerialAddinHelper::writeAndRead(int i, const std::vector<unsigned char>& se
 		return;
 
 	serialPorts[i]->write({ (char*)sendData.data(), (int)sendData.size() });
+	Sleep(50);
 
 	std::vector<unsigned char> recvData;
 
