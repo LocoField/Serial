@@ -2,6 +2,7 @@
 
 class SerialAddinBase;
 class SerialPort;
+class SerialData;
 
 class SerialAddinHelper final : public QObject
 {
@@ -18,7 +19,7 @@ protected:
 	void cancel();
 
 private:
-	void writeAndRead(int i, const std::vector<unsigned char>& data);
+	void writeAndRead(const SerialData& data);
 
 private:
 	SerialAddinBase* addin;
