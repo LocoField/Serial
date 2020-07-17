@@ -3,10 +3,13 @@
 #include <deque>
 #include <vector>
 
-struct MultiSerialData
+class SerialData
 {
+public:
+	std::vector<unsigned char> command;
+
 	int index;
-	std::vector<unsigned char> buffer;
+	int option;
 };
 
 class SerialAddinBase
@@ -32,8 +35,8 @@ protected:
 	virtual int checkCompleteData(const std::vector<unsigned char>& data) { return -1; }
 
 protected:
-	std::deque<MultiSerialData> sendQueue;
-	std::deque<MultiSerialData> recvQueue;
+	std::deque<SerialData> sendQueue;
+	std::deque<SerialData> recvQueue;
 
 };
 
