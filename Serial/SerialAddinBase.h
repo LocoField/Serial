@@ -32,7 +32,7 @@ public:
 	virtual void callback() abstract;
 
 protected:
-	virtual int checkCompleteData(const std::vector<unsigned char>& data) { return -1; }
+	virtual int checkCompleteData(const std::vector<unsigned char>& data) { return 0; }
 
 protected:
 	std::deque<SerialData> sendQueue;

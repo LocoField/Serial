@@ -108,18 +108,17 @@ void SerialAddinHelper::writeAndRead(const SerialData& data)
 
 		while (1)
 		{
-			QByteArray data = serialPorts[i]->read();
-			if (data.isEmpty())
+			QByteArray bytes = serialPorts[i]->read();
+			if (bytes.isEmpty())
 				break;
 
-			int length = addin->checkCompleteData({ data.begin(), data.end() });
-			if (length > 0)
-			{
-				received.insert(received.end(), data.cbegin(), data.cbegin() + length);
-				break;
-			}
+			received.insert(received.end(), bytes.cbegin(), bytes.cend());
 
-			received.insert(received.end(), data.cbegin(), data.cend());
+			int length = addin->checkCompleteData({ received.begin(), received.end() });
+			if (length == -1)
+				continue;
+
+			break;
 		}
 
 		addin->recvQueue.push_back({ received, i, 0 });
