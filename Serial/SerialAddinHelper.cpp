@@ -54,8 +54,11 @@ void SerialAddinHelper::perform()
 
 	addin->callback();
 
-	int value = addin->value();
-	dialog->setValue(value);
+	if (addin->maximum() != 0)
+	{
+		int value = addin->value();
+		dialog->setValue(value);
+	}
 
 	while (addin->sendQueue.size() > 0)
 	{
