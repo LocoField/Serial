@@ -92,9 +92,6 @@ QLayout* SerialPort::layoutCommandsSet()
 
 void SerialPort::makeWidgets()
 {
-	auto regexHexValidator = new QRegExpValidator;
-	regexHexValidator->setRegExp(QRegExp("([0-9a-fA-F]{2}\\s?)+"));
-
 	auto mainLayout = new QVBoxLayout;
 	auto groupBoxSerial = new QGroupBox;
 	auto groupBoxCommand = new QGroupBox;
@@ -140,7 +137,6 @@ void SerialPort::makeWidgets()
 		listCommands->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 		listCommands->setObjectName("listCommands");
 
-		lineEditSendCommand->setValidator(regexHexValidator);
 		lineEditSendCommand->setEnabled(false);
 
 		horizontalLayout->addWidget(lineEditSerialPortName);
@@ -212,24 +208,40 @@ void SerialPort::makeWidgets()
 		);
 
 		QObject::connect(lineEditSendCommand, &QLineEdit::returnPressed,
-			[this, lineEditSendCommand]()
+			[this, checkAsciiRead, lineEditSendCommand]()
 			{
-				QString command = lineEditSendCommand->text();
-				command.remove(QRegExp("\\s"));
-
-				QByteArray data;
-
-				for (int index = 0; index < command.length(); index += 2)
+				if (checkAsciiRead->isChecked())
 				{
-					QString parsed = command.mid(index, 2);
+					QString command = lineEditSendCommand->text();
 
-					auto value = QByteArray::fromHex(parsed.toLatin1());
-					data.append(value);
+					auto data = command.toLatin1();
+					data.push_back('\r');
+					data.push_back('\n');
+
+					if (write(data) == false)
+					{
+						cout << "send failed: " << data.toStdString() << endl;
+					}
 				}
-
-				if (write(data) == false)
+				else
 				{
-					cout << "send failed: " << data.toStdString() << endl;
+					QString command = lineEditSendCommand->text();
+					command.remove(QRegExp("\\s"));
+
+					QByteArray data;
+
+					for (int index = 0; index < command.length(); index += 2)
+					{
+						QString parsed = command.mid(index, 2);
+
+						auto value = QByteArray::fromHex(parsed.toLatin1());
+						data.append(value);
+					}
+
+					if (write(data) == false)
+					{
+						cout << "send failed: " << data.toStdString() << endl;
+					}
 				}
 			}
 		);
