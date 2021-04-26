@@ -135,6 +135,13 @@ void Dialog::initialize()
 			FreeLibrary(module);
 		};
 
+		QAction* actionYModem = new QAction("YModem");
+		connect(actionYModem, &QAction::triggered, [&, this]()
+		{
+			auto addinPath = QCoreApplication::applicationDirPath() + "/SerialAddinYModemd.dll";
+			executeAddin(addinPath.toStdString(), serialPorts);
+		});
+
 		QAction* actionLoadAddin = new QAction("Load");
 		connect(actionLoadAddin, &QAction::triggered, [&, this]()
 		{
@@ -152,6 +159,7 @@ void Dialog::initialize()
 			executeAddin(addinPath.toStdString(), serialPorts);
 		});
 
+		menuAddin->addAction(actionYModem);
 		menuAddin->addAction(actionLoadAddin);
 		menu->addMenu(menuAddin);
 	}
