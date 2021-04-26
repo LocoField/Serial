@@ -53,10 +53,13 @@ void SerialAddinHelper::perform()
 	}
 
 	addin->callback();
+	int maximum = addin->maximum();
 
-	if (addin->maximum() != 0)
+	if (maximum != 0)
 	{
 		int value = addin->value();
+
+		dialog->setMaximum(maximum);
 		dialog->setValue(value);
 	}
 
