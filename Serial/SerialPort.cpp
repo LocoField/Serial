@@ -419,7 +419,9 @@ void SerialPort::addCommandSet(const CommandSet& commandSet)
 
 				if (checkAsciiCommand->isChecked())
 				{
-					data = command.toLocal8Bit();
+					data = command.toLatin1();
+					data.push_back('\r');
+					data.push_back('\n');
 				}
 				else
 				{
