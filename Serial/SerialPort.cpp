@@ -36,12 +36,26 @@ SerialPort::SerialPort(int id)
 		}
 		else
 		{
-			command = data;
+			if (data.endsWith('\n'))
+				command = data.left(data.length() - 1);
+			else
+				command = data;
 		}
 
 		auto widgetList = serialWidget->findChild<QListWidget*>("listCommands");
 		if (widgetList)
 		{
+			auto lastItem = widgetList->item(widgetList->currentRow());
+			if (lastItem)
+			{
+				auto lastItemText = lastItem->text();
+				if (lastItemText.endsWith('\r') == false)
+				{
+					lastItem->setText(lastItemText + command);
+					return;
+				}
+			}
+
 			widgetList->addItem(command);
 			widgetList->setCurrentRow(widgetList->count() - 1);
 		}
