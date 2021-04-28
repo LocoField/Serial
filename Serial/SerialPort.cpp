@@ -227,6 +227,7 @@ void SerialPort::makeWidgets()
 				if (checkAsciiRead->isChecked())
 				{
 					QString command = lineEditSendCommand->text();
+					command.replace("\\r\\n", "\r\n");
 
 					auto data = command.toLatin1();
 					data.push_back('\r');
