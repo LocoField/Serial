@@ -272,7 +272,7 @@ void SerialPort::makeWidgets()
 
 		auto horizontalLayout = new QHBoxLayout;
 		auto pushButtonLoad = new QPushButton("Load");
-		auto pushButtonSave = new QPushButton("Save");
+		auto pushButtonAdd = new QPushButton("Add");
 		auto pushButtonClear = new QPushButton("Clear");
 
 		auto widget = new QWidget;
@@ -282,7 +282,7 @@ void SerialPort::makeWidgets()
 		widget->setObjectName("widgetCommandsSet");
 
 		horizontalLayout->addWidget(pushButtonLoad);
-		horizontalLayout->addWidget(pushButtonSave);
+		horizontalLayout->addWidget(pushButtonAdd);
 		horizontalLayout->addWidget(pushButtonClear);
 
 		verticalLayout->addLayout(horizontalLayout);
@@ -295,26 +295,33 @@ void SerialPort::makeWidgets()
 		QObject::connect(pushButtonLoad, &QPushButton::clicked,
 			[this]()
 			{
-				loadCommandSets();
+				QString filePath = QCoreApplication::applicationDirPath();
+
+				loadCommandSet(filePath + "/c" + QString::number(widgetId));
 			}
 		);
 
-		QObject::connect(pushButtonSave, &QPushButton::clicked,
+		QObject::connect(pushButtonAdd, &QPushButton::clicked,
 			[this]()
 			{
-				saveCommandSets();
+				QString filePath = QFileDialog::getOpenFileName(nullptr, "Add Command Set", QCoreApplication::applicationDirPath());
+				if (filePath.isEmpty())
+					return;
+
+				loadCommandSet(filePath);
 			}
 		);
 
 		QObject::connect(pushButtonClear, &QPushButton::clicked,
 			[this]()
 			{
-				clearCommandSets();
+				clearCommandSet();
 			}
 		);
 
 		loadOption();
-		loadCommandSets();
+
+		pushButtonLoad->click();
 	}
 }
 
@@ -379,7 +386,7 @@ bool SerialPort::saveOption()
 	return true;
 }
 
-void SerialPort::addCommandSet(const CommandSet& commandSet)
+void SerialPort::addCommandSetLayout(const CommandSet& commandSet)
 {
 	auto widget = new QWidget;
 	{
@@ -387,7 +394,6 @@ void SerialPort::addCommandSet(const CommandSet& commandSet)
 		{
 			checkAsciiCommand->setObjectName("checkAsciiCommand");
 			checkAsciiCommand->setChecked(commandSet.inputAscii);
-			checkAsciiCommand->setFixedWidth(60);
 			checkAsciiCommand->setEnabled(commandSet.edit);
 		}
 
@@ -395,15 +401,15 @@ void SerialPort::addCommandSet(const CommandSet& commandSet)
 		{
 			labelComment->setObjectName("labelComment");
 			labelComment->setText(commandSet.comment);
-			labelComment->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+			labelComment->setFixedWidth(200);
 		}
 
 		auto lineEditCommand = new QLineEdit;
 		{
 			lineEditCommand->setObjectName("lineEditCommand");
 			lineEditCommand->setText(commandSet.command);
+			lineEditCommand->setMinimumWidth(200);
 			lineEditCommand->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-			lineEditCommand->setAlignment(Qt::AlignRight);
 			lineEditCommand->setEnabled(commandSet.edit);
 		}
 
@@ -527,23 +533,21 @@ void SerialPort::addCommandSet(const CommandSet& commandSet)
 	layout->addWidget(widget);
 }
 
-bool SerialPort::loadCommandSets()
+bool SerialPort::loadCommandSet(const QString& filePath)
 {
-	QString filepath = QCoreApplication::applicationDirPath();
-
 	std::vector<CommandSet> commandSets;
-	if (COMMAND_SET_MANAGER.loadFromFile(filepath + "/c" + QString::number(widgetId), commandSets) == false)
+	if (COMMAND_SET_MANAGER.loadFromFile(filePath, commandSets) == false)
 		return false;
 
 	for (auto& commandSet : commandSets)
 	{
-		addCommandSet(commandSet);
+		addCommandSetLayout(commandSet);
 	}
 
 	return true;
 }
 
-bool SerialPort::saveCommandSets()
+bool SerialPort::saveCommandSet()
 {
 	QString filepath = QCoreApplication::applicationDirPath();
 
@@ -576,7 +580,7 @@ bool SerialPort::saveCommandSets()
 	return true;
 }
 
-void SerialPort::clearCommandSets()
+void SerialPort::clearCommandSet()
 {
 	auto layout = layoutCommandsSet();
 

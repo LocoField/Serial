@@ -28,10 +28,11 @@ protected:
 	bool loadOption();
 	bool saveOption();
 
-	void addCommandSet(const CommandSet& commandSet);
-	bool loadCommandSets();
-	bool saveCommandSets();
-	void clearCommandSets();
+	void addCommandSetLayout(const CommandSet& commandSet);
+
+	bool loadCommandSet(const QString& filePath);
+	bool saveCommandSet();
+	void clearCommandSet();
 
 protected:
 	bool connect(QString portName, int baudRate, int mode = 0);
