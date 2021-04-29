@@ -138,7 +138,14 @@ void Dialog::initialize()
 		QAction* actionYModem = new QAction("YModem");
 		connect(actionYModem, &QAction::triggered, [&, this]()
 		{
-			auto addinPath = QCoreApplication::applicationDirPath() + "/SerialAddinYModemd.dll";
+			auto addinPath = QCoreApplication::applicationDirPath() + "/SerialAddinYModem";
+
+#ifdef _DEBUG
+			addinPath += "d.dll";
+#else
+			addinPath += ".dll";
+#endif
+
 			executeAddin(addinPath.toStdString(), serialPorts);
 		});
 
