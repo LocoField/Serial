@@ -16,4 +16,4 @@
 - Modify "device_n" value in option.txt
 
 ## Addin
-- ...
+- YModem Upload
