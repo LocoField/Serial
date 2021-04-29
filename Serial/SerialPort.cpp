@@ -230,8 +230,12 @@ void SerialPort::makeWidgets()
 					command.replace("\\r\\n", "\r\n");
 
 					auto data = command.toLatin1();
-					data.push_back('\r');
-					data.push_back('\n');
+
+					if (data.endsWith("\r\n") == false)
+					{
+						data.push_back('\r');
+						data.push_back('\n');
+					}
 
 					if (write(data) == false)
 					{
