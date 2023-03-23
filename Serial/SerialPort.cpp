@@ -274,6 +274,8 @@ void SerialPort::makeWidgets()
 
 	// command box
 	{
+		auto scrollArea = new QScrollArea;
+		auto mainWidget = new QWidget;
 		auto verticalLayout = new QVBoxLayout;
 
 		auto horizontalLayout = new QHBoxLayout;
@@ -293,8 +295,16 @@ void SerialPort::makeWidgets()
 
 		verticalLayout->addLayout(horizontalLayout);
 		verticalLayout->addWidget(widget);
+		mainWidget->setLayout(verticalLayout);
 
-		groupBoxCommand->setLayout(verticalLayout);
+		scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+		scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+		scrollArea->setWidgetResizable(true);
+		scrollArea->setWidget(mainWidget);
+
+		auto scrollLayout = new QVBoxLayout;
+		scrollLayout->addWidget(scrollArea);
+		groupBoxCommand->setLayout(scrollLayout);
 
 		//////////////////////////////////////////////////////////////////////////
 

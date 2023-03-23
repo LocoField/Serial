@@ -29,6 +29,7 @@
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QProgressDialog>
 #include <QtWidgets/QFileDialog>
+#include <QtWidgets/QScrollArea>
 
 #include <QtGui/QValidator>
 #include <QtGui/QKeyEvent>
