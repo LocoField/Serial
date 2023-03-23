@@ -183,6 +183,7 @@ bool Dialog::loadOption()
 	int y = 500;
 	int w = 600;
 	int h = 800;
+	QVector<QVariant> separator;
 
 	QString filepath = QCoreApplication::applicationDirPath();
 	QFile loadFile(filepath + "/option.txt");
@@ -199,6 +200,8 @@ bool Dialog::loadOption()
 			QJsonObject object = doc.object();
 
 			n = object["device_n"].toInt();
+
+			separator = object["separator"].toArray().toVariantList().toVector();
 
 			x = object["dialog_x"].toInt();
 			y = object["dialog_y"].toInt();
@@ -226,6 +229,9 @@ bool Dialog::loadOption()
 		auto serialPort = new SerialPort(i);
 		serialPorts.emplace_back(serialPort);
 
+		for (auto&& c : separator)
+			serialPort->addCommandSeparator(c.toString());
+
 		serialLayout->addWidget(serialPort->widgetSerial());
 	}
 
@@ -248,14 +254,10 @@ bool Dialog::saveOption()
 	QSize wh = __super::size();
 
 	QJsonObject object = doc.object();
-
-	object["device_n"] = (int)serialPorts.size();
-
 	object["dialog_x"] = xy.x();
 	object["dialog_y"] = xy.y();
 	object["dialog_w"] = wh.width();
 	object["dialog_h"] = wh.height();
-
 	object["file_path"] = lastFileDialogPath;
 
 	loadFile.close();

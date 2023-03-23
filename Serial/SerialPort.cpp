@@ -45,19 +45,21 @@ SerialPort::SerialPort(int id)
 		auto widgetList = serialWidget->findChild<QListWidget*>("listCommands");
 		if (widgetList)
 		{
-			auto lastItem = widgetList->item(widgetList->currentRow());
-			if (lastItem)
+			int c = widgetList->count();
+			auto item = widgetList->item(c - 1);
+			QString lastCommand = item->text();
+
+			for (auto&& c : commandSeparator)
 			{
-				auto lastItemText = lastItem->text();
-				if (lastItemText.endsWith('\r') == false)
+				auto lastCommandEnd = lastCommand.right(3).left(2);
+				if (lastCommandEnd.contains(c))
 				{
-					lastItem->setText(lastItemText + command);
+					widgetList->addItem(command);
 					return;
 				}
 			}
 
-			widgetList->addItem(command);
-			widgetList->setCurrentRow(widgetList->count() - 1);
+			item->setText(lastCommand + command);
 		}
 		else
 		{
@@ -152,6 +154,7 @@ void SerialPort::makeWidgets()
 		listCommands->setMinimumSize(600, 200);
 		listCommands->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 		listCommands->setObjectName("listCommands");
+		listCommands->addItem(QString());
 
 		lineEditSendCommand->setEnabled(false);
 
@@ -674,4 +677,9 @@ bool SerialPort::read(char& code, int timeout)
 	}
 
 	return false;
+}
+
+void SerialPort::addCommandSeparator(const QString& text)
+{
+	commandSeparator.push_back(text);
 }

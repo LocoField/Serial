@@ -49,6 +49,8 @@ public:
 	bool write(char code);
 	bool read(char& code, int timeout = 2000);
 
+	void addCommandSeparator(const QString& text);
+
 protected:
 	bool autoRead = true;
 
@@ -56,6 +58,7 @@ protected:
 	QWidget* serialWidget = nullptr;
 
 	std::vector<QWidget*> commandsSetWidget;
+	std::vector<QString> commandSeparator;
 
 };
 
