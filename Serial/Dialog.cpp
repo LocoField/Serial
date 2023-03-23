@@ -179,10 +179,6 @@ bool Dialog::loadOption()
 {
 	bool retval = true;
 	int n = 1;
-	int x = 500;
-	int y = 500;
-	int w = 600;
-	int h = 800;
 	QVector<QVariant> separator;
 
 	QString filepath = QCoreApplication::applicationDirPath();
@@ -198,20 +194,30 @@ bool Dialog::loadOption()
 		else
 		{
 			QJsonObject object = doc.object();
+			auto keys = object.keys();
 
 			n = object["device_n"].toInt();
 
 			separator = object["separator"].toArray().toVariantList().toVector();
 
-			x = object["dialog_x"].toInt();
-			y = object["dialog_y"].toInt();
-			w = object["dialog_w"].toInt();
-			h = object["dialog_h"].toInt();
+			if (keys.contains("dialog_x") &&
+				keys.contains("dialog_y"))
+			{
+				int x = object["dialog_x"].toInt();
+				int y = object["dialog_y"].toInt();
+				__super::move(x, y);
+			}
 
-			lastFileDialogPath = object["file_path"].toString();
+			if (keys.contains("dialog_w") &&
+				keys.contains("dialog_h"))
+			{
+				int w = object["dialog_w"].toInt();
+				int h = object["dialog_h"].toInt();
+				__super::resize(w, h);
+			}
 
-			__super::move(x, y);
-			__super::resize(w, h);
+			if (keys.contains("file_path"))
+				lastFileDialogPath = object["file_path"].toString();
 		}
 
 		loadFile.close();
