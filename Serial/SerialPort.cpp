@@ -126,7 +126,8 @@ void SerialPort::makeWidgets()
 		auto comboBoxProtocol = new QComboBox;
 		auto pushButtonConnect = new QPushButton("Connect");
 		auto horizontalSpacer = new QSpacerItem(40, 10, QSizePolicy::Expanding, QSizePolicy::Minimum);
-		auto checkAsciiRead = new QCheckBox("ASCII");
+		auto checkAsciiRead = new QCheckBox("Read ASCII");
+		auto checkAsciiWrite = new QCheckBox("Write ASCII");
 		auto buttonCommandsClear = new QPushButton("Clear");
 
 		auto listCommands = new QListWidget;
@@ -146,6 +147,7 @@ void SerialPort::makeWidgets()
 		pushButtonConnect->setObjectName("pushButtonConnect");
 
 		checkAsciiRead->setObjectName("checkAsciiRead");
+		checkAsciiWrite->setObjectName("checkAsciiWrite");
 
 		listCommands->setMinimumSize(600, 200);
 		listCommands->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -159,6 +161,7 @@ void SerialPort::makeWidgets()
 		horizontalLayout->addWidget(pushButtonConnect);
 		horizontalLayout->addItem(horizontalSpacer);
 		horizontalLayout->addWidget(checkAsciiRead);
+		horizontalLayout->addWidget(checkAsciiWrite);
 		horizontalLayout->addWidget(buttonCommandsClear);
 
 		verticalLayout->addLayout(horizontalLayout);
@@ -222,9 +225,9 @@ void SerialPort::makeWidgets()
 		);
 
 		QObject::connect(lineEditSendCommand, &QLineEdit::returnPressed,
-			[this, checkAsciiRead, lineEditSendCommand]()
+			[this, checkAsciiWrite, lineEditSendCommand]()
 			{
-				if (checkAsciiRead->isChecked())
+				if (checkAsciiWrite->isChecked())
 				{
 					QString command = lineEditSendCommand->text();
 					command.replace("\\r\\n", "\r\n");
