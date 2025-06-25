@@ -4,7 +4,7 @@
 #include "SerialAddinHelper.h"
 #include "SerialAddinBase.h"
 
-#define DIALOG_TITLE "LocoField Serial v2.2.0"
+#define DIALOG_TITLE "LocoField Serial v2.2.1"
 
 Dialog::Dialog()
 {

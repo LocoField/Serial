@@ -124,7 +124,7 @@ void SerialPort::makeWidgets()
 
 		auto horizontalLayout = new QHBoxLayout;
 		auto lineEditSerialPortName = new QLineEdit;
-		auto comboBoxBaudRate = new QComboBox;
+		auto comboBoxBaudRate = new QLineEdit;
 		auto comboBoxProtocol = new QComboBox;
 		auto pushButtonConnect = new QPushButton("Connect");
 		auto horizontalSpacer = new QSpacerItem(40, 10, QSizePolicy::Expanding, QSizePolicy::Minimum);
@@ -139,7 +139,7 @@ void SerialPort::makeWidgets()
 		lineEditSerialPortName->setPlaceholderText("Press return key");
 		lineEditSerialPortName->setObjectName("lineEditSerialPortName");
 
-		comboBoxBaudRate->addItems({ "115200", "57600", "38400", "19200", "9600" });
+		comboBoxBaudRate->setValidator(new QIntValidator(0, 921600));
 		comboBoxBaudRate->setObjectName("comboBoxBaudRate");
 
 		comboBoxProtocol->addItems({ "8N1", "8E1", "8O1" });
@@ -204,7 +204,7 @@ void SerialPort::makeWidgets()
 				}
 				else
 				{
-					bool re = connect(lineEditSerialPortName->text(), comboBoxBaudRate->currentText().toInt(), comboBoxProtocol->currentIndex());
+					bool re = connect(lineEditSerialPortName->text(), comboBoxBaudRate->text().toInt(), comboBoxProtocol->currentIndex());
 					if (re)
 					{
 						pushButtonConnect->setText("Disconnect");
@@ -360,11 +360,11 @@ bool SerialPort::loadOption()
 			QJsonObject object = doc.object();
 
 			auto lineEditSerialPortName = serialWidget->findChild<QLineEdit*>("lineEditSerialPortName");
-			auto comboBoxBaudRate = serialWidget->findChild<QComboBox*>("comboBoxBaudRate");
+			auto comboBoxBaudRate = serialWidget->findChild<QLineEdit*>("comboBoxBaudRate");
 			auto comboBoxProtocol = serialWidget->findChild<QComboBox*>("comboBoxProtocol");
 
 			lineEditSerialPortName->setText(object["default_port"].toString());
-			comboBoxBaudRate->setCurrentIndex(object["default_baudrate"].toInt());
+			comboBoxBaudRate->setText(object["default_baudrate"].toString());
 			comboBoxProtocol->setCurrentIndex(object["default_protocol"].toInt());
 		}
 
@@ -387,12 +387,12 @@ bool SerialPort::saveOption()
 		return false;
 
 	auto lineEditSerialPortName = serialWidget->findChild<QLineEdit*>("lineEditSerialPortName");
-	auto comboBoxBaudRate = serialWidget->findChild<QComboBox*>("comboBoxBaudRate");
+	auto comboBoxBaudRate = serialWidget->findChild<QLineEdit*>("comboBoxBaudRate");
 	auto comboBoxProtocol = serialWidget->findChild<QComboBox*>("comboBoxProtocol");
 
 	QJsonObject object;
 	object["default_port"] = lineEditSerialPortName->text();
-	object["default_baudrate"] = comboBoxBaudRate->currentIndex();
+	object["default_baudrate"] = comboBoxBaudRate->text();
 	object["default_protocol"] = comboBoxProtocol->currentIndex();
 
 	QJsonDocument jsonDocument(object);
